@@ -1,17 +1,19 @@
 import streamlit as st
 from datetime import datetime, timedelta, time
 
-st.title("Jet Lag Recovery Calculator")
-
-# Input fields for Destination Arrival Date and Time
-destination_date = st.date_input("Destination Arrival Date")
-destination_time = st.time_input("Destination Arrival Time (AM/PM)", time(12, 0))  # Default to 12:00 PM
-destination_arrival_time = datetime.combine(destination_date, destination_time)
+# Title and Version
+st.title("Dripdok Jetlag Calculator")
+st.caption("V2.0b 2024")
 
 # Input fields for Origin Departure Date and Time
 origin_date = st.date_input("Origin Departure Date")
 origin_time = st.time_input("Origin Departure Time (AM/PM)", time(12, 0))  # Default to 12:00 PM
 origin_departure_time = datetime.combine(origin_date, origin_time)
+
+# Input fields for Destination Arrival Date and Time
+destination_date = st.date_input("Destination Arrival Date")
+destination_time = st.time_input("Destination Arrival Time (AM/PM)", time(12, 0))  # Default to 12:00 PM
+destination_arrival_time = datetime.combine(destination_date, destination_time)
 
 # Input for Year of Birth
 dob_year = st.number_input("Year of Birth", min_value=1900, max_value=datetime.now().year, value=1990)
@@ -26,13 +28,13 @@ oral_nmn = st.selectbox("Will you use Oral NMN?", ["yes", "no"])
 return_flight = st.selectbox("Do you have return flight information?", ["no", "yes"])
 
 if return_flight == "yes":
-    return_date = st.date_input("Return Flight Arrival Date")
-    return_time = st.time_input("Return Flight Arrival Time (AM/PM)", time(12, 0))  # Default to 12:00 PM
-    return_arrival_time = datetime.combine(return_date, return_time)
-
     return_departure_date = st.date_input("Return Flight Departure Date")
     return_departure_time = st.time_input("Return Flight Departure Time (AM/PM)", time(12, 0))  # Default to 12:00 PM
     return_departure_time = datetime.combine(return_departure_date, return_departure_time)
+
+    return_date = st.date_input("Return Flight Arrival Date")
+    return_time = st.time_input("Return Flight Arrival Time (AM/PM)", time(12, 0))  # Default to 12:00 PM
+    return_arrival_time = datetime.combine(return_date, return_time)
 else:
     return_arrival_time = None
     return_departure_time = None
@@ -104,3 +106,9 @@ if st.button("Calculate"):
         st.markdown("**Oral NMN Schedule (Post-Arrival)**")
         for day in oral_nmn_schedule:
             st.write(f"{day['date']} at {day['best_time']} - Dosage: {day['dosage']}")
+
+    # Add link to Dripdok at the bottom
+    st.markdown(
+        "[Visit Dripdok To Get Your NMN or NAD IV Today!](https://wa.me/6281804608182)", 
+        unsafe_allow_html=True
+    )
