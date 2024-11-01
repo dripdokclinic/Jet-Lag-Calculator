@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, time
 
 # Title and Version
 st.title("Dripdok Jetlag Calculator")
-st.caption("V2.0b 2024")
+st.caption("V2.0.2 2024")
 
 # Input fields for Origin Departure Date and Time
 origin_date = st.date_input("Origin Departure Date")
