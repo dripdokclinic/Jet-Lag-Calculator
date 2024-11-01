@@ -16,6 +16,9 @@ origin_departure_time = datetime.combine(origin_date, origin_time)
 # Input for Year of Birth
 dob_year = st.number_input("Year of Birth", min_value=1900, max_value=datetime.now().year, value=1990)
 
+# Input for Grogginess Level
+grogginess_level = st.selectbox("Grogginess Level", ["Low", "Moderate", "High"])
+
 # Option for Oral NMN usage
 oral_nmn = st.selectbox("Will you use Oral NMN?", ["yes", "no"])
 
@@ -34,14 +37,28 @@ else:
     return_arrival_time = None
     return_departure_time = None
 
-# Calculation and Output Section
+# Calculate Dosage and Drip Duration
 if st.button("Calculate"):
-    # Determine recommended NAD dosage based on age
+    # Age-based and grogginess-based NMN oral dosage
     current_year = datetime.now().year
     age = current_year - dob_year
-    nad_iv_options = {250: 45, 500: 60}  # Dosage in mg with durations in minutes
-    recommended_nad_dose = 500 if age >= 40 else 250
-    iv_duration = nad_iv_options[recommended_nad_dose]
+
+    # Dynamic NMN Dosage based on grogginess and age
+    if oral_nmn == "yes":
+        if age > 50 or grogginess_level == "High":
+            oral_nmn_dosage = 1000
+        elif 30 < age <= 50 or grogginess_level == "Moderate":
+            oral_nmn_dosage = 750
+        else:
+            oral_nmn_dosage = 500
+
+    # NAD IV Dosage and Drip Duration based on Age
+    if age >= 40:
+        recommended_nad_dose = 500
+        iv_duration = 90 if age > 60 else 60  # Longer duration for older age to reduce tolerance issues
+    else:
+        recommended_nad_dose = 250
+        iv_duration = 45
 
     # Schedule for IV treatment before and after flight
     pre_flight_iv_time = origin_departure_time - timedelta(hours=24)
@@ -61,7 +78,7 @@ if st.button("Calculate"):
             oral_nmn_schedule.append({
                 "date": (current_day + timedelta(days=day)).strftime("%Y-%m-%d"),
                 "best_time": "09:00 AM",  # Suggested time for NMN
-                "dosage": "300 mg"
+                "dosage": f"{oral_nmn_dosage} mg"
             })
 
     # Display the calculated results
